@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd">
+<!-- 执行定时操作 -->
+<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	<property name="triggers">
+		<list>
+			<!-- <ref bean="doTime"/>
+			<ref bean="doTime2"/> -->
+		</list>
+	</property>
+</bean>
+<!-- 设置定时时间 -->
+<bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	<property name="jobDetail" ref="doTask"/>
+	<property name="cronExpression" value="0/5 * * * * ?"/>
+</bean>
+<bean id="doTime2" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	<property name="jobDetail" ref="doTask2"/>
+	<property name="cronExpression" value="0/5 * * * * ?"/>
+</bean>
+<!-- 设置定时任务 -->
+<bean id="doTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	<property name="targetObject" ref="timerTask"/>
+	<property name="targetMethod" value="goodsUseNumUpdate"/>
+</bean>
+<bean id="doTask2" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	<property name="targetObject" ref="timerTask"/>
+	<property name="targetMethod" value="storeWarn"/>
+</bean>
+<!-- 设置定时执行的方法 -->
+<bean id="timerTask" class="cn.itcast.erp.util.quartz.TimerTask">
+	<property name="goodsEbi" ref="goodsEbi"/>
+	<property name="mailSender" ref="mailSender"/>
+</bean>
+		
+		
+</beans>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="cn.itcast.erp.invoice.goods.vo.GoodsModel" table="tbl_goods">
+		<id name="uuid" column="uuid">
+			<generator class="native"/>
+		</id>
+		<property name="name" column="name"/>
+		<property name="origin" column="origin"/>
+		<property name="producer" column="producer"/>
+		<property name="unit" column="unit"/>
+		<property name="useNum" column="useNum"/>
+		<property name="inPrice" column="inPrice"/>
+		<property name="outPrice" column="outPrice"/>
+		<!-- 对商品类别多对一 -->
+		<many-to-one name="gtm"
+			class="cn.itcast.erp.invoice.goodstype.vo.GoodsTypeModel"
+			column="goodsTypeUuid"			
+		/>
+	</class>
+</hibernate-mapping>

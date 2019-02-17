@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <constant name="struts.devMode" value="true" />
+    <constant name="struts.ui.theme" value="simple" />
+    <package name="default" namespace="/" extends="json-default">
+    	<interceptors>
+    		<interceptor name="loginIntercepor" class="cn.itcast.erp.util.interceptor.LoginInterceptor"/>
+    		<interceptor name="exceptionInterceptor" class="cn.itcast.erp.util.interceptor.ExceptionInterceptor"/>
+    		<interceptor name="authInterceptor" class="cn.itcast.erp.util.interceptor.AuthInterceptor"/>
+    		
+    		<interceptor-stack name="systemStack">
+    			<interceptor-ref name="exceptionInterceptor"/>
+    			<interceptor-ref name="loginIntercepor"/>
+    			<interceptor-ref name="authInterceptor"/>
+    			<interceptor-ref name="defaultStack"/>
+    		</interceptor-stack>
+    	</interceptors>
+    	<default-interceptor-ref name="systemStack"/>
+    	<global-results>
+    		<result name="nologin">index.jsp</result>
+    		<result name="list">/WEB-INF/jsps/${actionName}/list.jsp</result>
+    		<result name="input">/WEB-INF/jsps/${actionName}/input.jsp</result>
+    		<result name="toList" type="redirectAction">${actionName}_list</result>
+    		<result name="error">/WEB-INF/jsps/tools/error.jsp</result>
+    	</global-results>
+    	<action name="page_*">
+    		<result>/WEB-INF/jsps/{1}.jsp</result>
+    	</action>
+    	<action name="emp_*" class="empAction" method="{1}">
+    		<result name="loginSuccess">/WEB-INF/jsps/main.jsp</result>
+    		<result name="loginFail">/WEB-INF/jsps/login.jsp</result>
+	 		<result name="toChangPwd">/WEB-INF/jsps/emp/changePwd.jsp</result>   	
+    	</action>
+    	
+    	<!-- dep  -->
+    	<action name="dep_*" class="depAction" method="{1}">
+    	</action>
+
+    	<!-- res -->
+    	<action name="res_*" class="resAction" method="{1}">
+    	</action>
+
+    	<!-- role -->
+    	<action name="role_*" class="roleAction" method="{1}">
+    	</action>
+    	
+    	
+    	<!-- menu -->
+    	<action name="menu_*" class="menuAction" method="{1}">
+    	</action>
+
+    	<!-- supplier -->
+    	<action name="supplier_*" class="supplierAction" method="{1}">
+    	</action>
+    	
+    	<!-- goodsType -->
+    	<action name="goodsType_*" class="goodsTypeAction" method="{1}">
+    		<result name="ajaxGetBySm" type="json">
+    			<!-- 数据过滤 -->
+    			<param name="root">action</param>
+    			<param name="includeProperties">
+    				gtmList\[\d+\]\.uuid,
+    				gtmList\[\d+\]\.name
+    			</param>
+    		</result>
+    	</action>
+    	
+    	<!-- goods -->
+    	<action name="goods_*" class="goodsAction" method="{1}">
+    	</action>
+    	
+    	<!-- order -->
+    	<action name="order_*" class="orderAction" method="{1}">
+    		<!-- 申请 -->
+    		<result name="buyList">/WEB-INF/jsps/order/buy/buylist.jsp</result>
+    		<result name="buyInput">/WEB-INF/jsps/order/buy/buyinput.jsp</result>
+    		<result name="toBuyList" type="redirectAction">order_buyList</result>
+    		<result name="buyDetail">/WEB-INF/jsps/order/buy/buydetail.jsp</result>
+    		<!-- 审核 -->
+    		<result name="buyCheckList">/WEB-INF/jsps/order/buy/buyCheckList.jsp</result>
+    		<result name="buyCheckDetail">/WEB-INF/jsps/order/buy/buyCheckDetail.jsp</result>
+    		<result name="toBuyCheckPass" type="redirectAction">order_buyCheckList</result>
+    		<!-- 入库 -->
+    		<result name="inStoreList">/WEB-INF/jsps/order/in/inStoreList.jsp</result>
+    		<result name="inStoreDetail">/WEB-INF/jsps/order/in/inStoreDetail.jsp</result>
+			    		
+    		
+    		<!-- ajax -->
+    		<result name="ajaxGetGtmAndGm" type="json">
+    			<param name="includeProperties">
+    				gtmList\[\d+\]\.uuid,
+    				gtmList\[\d+\]\.name,
+    				gmList\[\d+\]\.uuid,
+    				gmList\[\d+\]\.name,
+    				gm\.inPriceView
+    			</param>
+    		</result>
+    		<result name="ajaxGetGm" type="json">
+    			<param name="includeProperties">
+    				gmList\[\d+\]\.uuid,
+    				gmList\[\d+\]\.name,
+    				gm\.inPriceView
+    			</param>
+    		</result>
+    		
+    		<result name="ajaxGetPrice" type="json">
+    			<param name="root">gm</param>
+    			<param name="includeProperties">
+    				inPriceView
+    			</param>
+    		</result>
+    		<result name="ajaxInStore" type="json">
+    			<param name="root">odm</param>
+    			<param name="includeProperties">
+    				num,
+    				surplus
+    			</param>
+    		</result>
+    		
+    	</action>
+    	
+    	
+    	<action name="transport_*" class="orderAction" method="{1}">
+    		<result name="taskList">/WEB-INF/jsps/transport/taskList.jsp</result>
+    		<result name="taskDetail">/WEB-INF/jsps/transport/taskDetail.jsp</result>
+    		<result name="toTaskList" type="redirectAction">transport_taskList</result>
+    		<result name="tasks">/WEB-INF/jsps/transport/tasks.jsp</result>
+    		<result name="toTasks">/WEB-INF/jsps/transport/task.jsp</result>
+    		<result name="endTask" type="redirectAction">transport_tasks</result>
+    	</action>
+   		
+    	
+    	<!-- orderDetail -->
+    	<action name="orderDetail_*" class="orderDetailAction" method="{1}">
+    		<result name="ajaxGetSurplus" type="json">
+    			<param name="root">om</param>
+    			<param name="includeProperties">
+    				surplus
+    			</param>
+    		</result>
+    	</action>
+    	
+    	<!-- store -->
+    	<action name="store_*" class="storeAction" method="{1}">
+    	</action>
+    	
+    	<!-- storeDetail -->
+    	<action name="storeDetail_*" class="storeDetailAction" method="{1}">
+    	</action>
+    	
+    	<!-- storeOper -->
+    	<action name="storeOper_*" class="storeOperAction" method="{1}">
+    	</action>
+    	
+    	<!-- bill -->
+    	<action name="bill_*" class="billAction" method="{1}">
+    		<result name="buyBillList">/WEB-INF/jsps/bill/buyBillList.jsp</result>
+    		
+    		<!-- ajax -->
+    		<result name="ajaxGetBuyBillDetail" type="json">
+				<param name="root">action</param>
+				<param name="includeProperties">
+					odmList\[\d+\]\.num,
+					odmList\[\d+\]\.priceView,
+					odmList\[\d+\]\.price,
+					odmList\[\d+\]\.totalPriceView,
+					odmList\[\d+\]\.om\.orderNum,
+					odmList\[\d+\]\.om\.createTimeView
+				</param>
+			</result>
+    	</action>
+    	
+    </package>
+</struts>

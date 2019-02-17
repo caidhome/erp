@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="cn.itcast.erp.auth.emp.vo.EmpModel" table="tbl_emp">
+		<id name="uuid" column="uuid">
+			<generator class="native"/>
+		</id>
+		<property name="username" column="username"/>
+		<property name="name" column="name"/>
+		<property name="pwd" column="pwd"/>
+		<property name="email" column="email"/>
+		<property name="tele" column="tele"/>
+		<property name="address" column="address"/>
+		<property name="gender" column="gender"/>
+		<property name="birthday" column="birthday"/>
+		<property name="lastLoginIp" column="lastLoginIp"/>
+		<property name="lastLoginTime" column="lastLoginTime"/>
+		<property name="loginTimes" column="loginTimes"/>
+		
+		<!-- 与部门之间一对多 -->
+		<many-to-one name="dm" class="cn.itcast.erp.auth.dep.vo.DepModel" column="depUuid"/>
+		<!-- 与角色之间多对多 -->
+		<set name="roles" table="tbl_emp_role">
+			<key column="empUuid"/>
+			<many-to-many column="roleUuid" class="cn.itcast.erp.auth.role.vo.RoleModel"/>
+		</set>
+	</class>
+</hibernate-mapping>
